@@ -1,0 +1,63 @@
+CREATE TABLE users (
+    userId VARCHAR2(36) PRIMARY KEY, 
+    userEmail VARCHAR2(255) NOT NULL,
+    userName VARCHAR2(255) NOT NULL,
+    userRole VARCHAR2(50) NOT NULL,
+    userPassword VARCHAR2(255) NOT NULL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP
+);
+
+
+CREATE TABLE basket (
+    basketId VARCHAR2(36) PRIMARY KEY, 
+    basketName VARCHAR2(255) NOT NULL,
+    basketStocklist CLOB NOT NULL, 
+    basketPrice NUMBER(10, 2) NOT NULL,
+    basketStrategy CLOB, 
+    basketCreatedBy VARCHAR2(36), 
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP,
+    FOREIGN KEY (basketCreatedBy) REFERENCES users(userId)
+);
+
+CREATE TABLE stocks (
+    stockId VARCHAR2(36) PRIMARY KEY,
+    stockName VARCHAR2(255) NOT NULL,
+    stockCurrentPrice NUMBER(10, 2) NOT NULL,
+    stockPreviousPrice NUMBER(10, 2) NOT NULL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP
+);
+
+CREATE TABLE account (
+    accountId VARCHAR2(36) PRIMARY KEY,
+    accountNumber VARCHAR2(20) NOT NULL,
+    userId VARCHAR2(36), 
+    balance NUMBER(10, 2) NOT NULL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId)
+);
+
+CREATE TABLE transaction (
+    transactionId VARCHAR2(36) PRIMARY KEY, 
+    transactionType VARCHAR2(50) NOT NULL,
+    transactionAmount NUMBER(10, 2) NOT NULL,
+    userId VARCHAR2(36),  
+    basketId VARCHAR2(36) NULL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId),
+    FOREIGN KEY (basketId) REFERENCES basket(basketId)
+);
+
+CREATE TABLE portfolio (
+    portfolioId VARCHAR2(36) PRIMARY KEY, 
+    basketId VARCHAR2(36), 
+    userId VARCHAR2(36), 
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP,
+    FOREIGN KEY (basketId) REFERENCES basket(basketId),
+    FOREIGN KEY (userId) REFERENCES users(userId)
+);
